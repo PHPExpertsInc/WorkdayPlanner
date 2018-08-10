@@ -32,7 +32,7 @@ class HolidayDetector
     /** @var object */
     private $holidaySpecs = [];
 
-    public function __construct(string $country)
+    public function __construct(string $country = 'us')
     {
         $this->country = $country;
         $this->holidaySpecs = array_merge($this->holidaySpecs, $this->fetchHolidaySpecs());
