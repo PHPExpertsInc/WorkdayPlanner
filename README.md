@@ -25,6 +25,60 @@ With this package, all of these technicalities are handled for you. You give it
 a date range, and it will dutifully spit out the workdays, keeping in mind both
 the actual and observed U.S. national holidays common to most employers.
 
+## Ad-hoc Workday Verification
+
+```php
+    use PHPExperts\WorkdayPlanner\WorkdayDetector;
+    
+    function isWorkday($dateString) {
+        $isWorkday = WorkdayDetector::isWorkday(new \DateTime($dateString));
+        $isOrIsnt = $isWorkday ? 'is' : 'is not';
+
+        echo "$dateString $isOrIsnt a work day.\n";
+    }
+    
+    // Is Friday, 10 August 2018, a workday?
+    isWorkday('10 August 2018');    // Workday
+    isWorkday('11 August 2018');    // Weekend
+    isWorkday('25 December 2018');  // Fixed holiday
+    isWorkday('22 November 2018');  // Floating holiday
+    
+     /* Output:
+     10 August 2018 is a work day.
+     11 August 2018 is not a work day.
+     25 December 2018 is not a work day.
+     22 November 2018 is not a work day. 
+     */
+```
+
+## Floating Holidays
+
+Some holidays are based upon a certain day of the month, instead of a fixed date.
+These are called "floating holidays". 
+
+The date spec looks like this for Thanksgiving Day:
+```json
+  {
+    "name": "Thanksgiving Day",
+    "type": "day",
+    "when": "fourth Thursday of November"
+  }
+```
+Examples:
+```php
+    WorkdayDetector::isWorkday(new \DateTime('2018-11-22')); // false; Thanksgiving Day
+    WorkdayDetector::isWorkday(new \DateTime('2019-11-28')); // false; Thanksgiving Day
+
+    echo (new HolidayDetector())         // 2018-11-22
+        ->getHoliday('Thanksgiving Day')
+        ->format('Y-m-d');
+
+    echo (new HolidayDetector())         // 2018-11-28
+        ->changeYear(2019)
+        ->getHoliday('Thanksgiving Day')
+        ->format('Y-m-d');
+```
+
 ### Observerable Holidays
 
 ```php
