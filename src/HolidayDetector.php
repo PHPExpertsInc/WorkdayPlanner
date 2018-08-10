@@ -94,11 +94,8 @@ class HolidayDetector
         $this->holidays[$actualDateString] = $date;
         $this->holidaysByName[$spec->name] = $date;
 
-
-        if ($observedDateString !== $actualDateString) {
-            $this->holidays[$observedDateString] = $observedDate;
-            $this->holidaysByName[$spec->name . ' (Observed)'] = $observedDate;
-        }
+        $this->holidays[$observedDateString] = $observedDate;
+        $this->holidaysByName[$spec->name . ' (Observed)'] = $observedDate;
     }
 
     /**
