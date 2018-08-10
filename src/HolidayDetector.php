@@ -61,7 +61,7 @@ class HolidayDetector
             throw new \LogicException("No accessible holiday data for '$country'.");
         }
 
-        $holidayData = json_decode(file_get_contents($holidayFile));
+        $holidayData = json_decode((string) file_get_contents($holidayFile));
         if (!$holidayData) {
             throw new \RuntimeException("Invalid holiday data for '$country'.");
         }
