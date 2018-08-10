@@ -29,7 +29,7 @@ class HolidayDetector
     /** @var int */
     private $year;
 
-    /** @var object */
+    /** @var array */
     private $holidaySpecs = [];
 
     public function __construct(string $country = 'us')
