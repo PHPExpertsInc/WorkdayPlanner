@@ -1,0 +1,42 @@
+[
+  {
+    "name": "New Year's Day",
+    "type": "date",
+    "when": "01-01"
+  },
+  {
+    "name": "Memorial Day",
+    "type": "day",
+    "when": "last Monday of May"
+  },
+  {
+    "name": "Independence Day",
+    "type": "date",
+    "when": "07-04"
+  },
+  {
+    "name": "Labor Day",
+    "type": "day",
+    "when": "first Monday of September"
+  },
+  {
+    "name": "Thanksgiving Day",
+    "type": "day",
+    "when": "fourth Thursday of November"
+  },
+  {
+    "name": "Christmas Eve",
+    "type": "date",
+    "when": "12-24"
+  },
+  {
+    "name": "Christmas Day",
+    "type": "date",
+    "when": "12-25"
+  },
+  {
+    "name": "New Years Eve",
+    "type": "date",
+    "when": "12-31"
+  }
+]

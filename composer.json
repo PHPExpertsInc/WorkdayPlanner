@@ -1,0 +1,31 @@
+{
+    "name": "phpexperts/workday-planner",
+    "description": "Given a date range, this will give you all of the workdays for that country.",
+    "homepage": "https://github.com/phpexpertsinc/workday-planner",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Theodore R. Smith",
+            "email": "theodore@phpexperts.pro"
+        }
+    ],
+    "require": {
+        "php": "^7.1"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^7.0"
+    },
+    "autoload": {
+        "classmap": [
+            "tests"
+        ],
+        "psr-4": {
+            "PHPExperts\\WorkdayPlanner\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "PHPExperts\\WorkdayPlanner\\Tests\\": "tests"
+        }
+    }
+}
