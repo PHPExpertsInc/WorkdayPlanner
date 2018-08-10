@@ -18,6 +18,9 @@ class WorkdayPlanner implements \ArrayAccess, \Countable, \IteratorAggregate
     /** @var \DateTime[] */
     protected $workdays;
 
+    /** @var \DateTime[] */
+    protected $workdaysByDate;
+
     /** @var int */
     private $numberOfWorkdays = 0;
 
@@ -38,7 +41,7 @@ class WorkdayPlanner implements \ArrayAccess, \Countable, \IteratorAggregate
         foreach ($period as $date) {
             if (WorkdayDetector::isWorkday($date, $country)) {
                 $this->workdays[$workdayCount++] = $date;
-                $this->workdays[$date->format('Y-m-d')] = $date;
+                $this->workdaysByDate[$date->format('Y-m-d')] = $date;
             }
         }
 
@@ -56,9 +59,13 @@ class WorkdayPlanner implements \ArrayAccess, \Countable, \IteratorAggregate
     /**
      * {@inheritdoc}
      */
-    public function offsetExists($offset)
+    public function offsetExists($index)
     {
-        return isset($this->workdays[$offset]);
+        if (is_string($index)) {
+            return isset($this->workdaysByDate[$index]);
+        }
+
+        return isset($this->workdays[$index]);
     }
 
     /**
@@ -66,7 +73,13 @@ class WorkdayPlanner implements \ArrayAccess, \Countable, \IteratorAggregate
      */
     public function offsetGet($index)
     {
-        return $this->workdays[$index];
+        // Let PHP deal with undefined indexes in its typical fashion.
+        if (is_int($index)) {
+            return $this->workdays[$index];
+        }
+        else {
+            return $this->workdaysByDate[$index];
+        }
     }
 
     /**
@@ -82,7 +95,7 @@ class WorkdayPlanner implements \ArrayAccess, \Countable, \IteratorAggregate
      */
     public function offsetUnset($index)
     {
-        if (!isset($this->workdays[$index])) {
+        if (!isset($this->workdays[$index]) && !isset($this->workdaysByDate[$index])) {
             return;
         }
 
@@ -97,7 +110,7 @@ class WorkdayPlanner implements \ArrayAccess, \Countable, \IteratorAggregate
         }
 
         unset($this->workdays[$numericKey]);
-        unset($this->workdays[$dateString]);
+        unset($this->workdaysByDate[$dateString]);
     }
 
     /**
@@ -106,21 +119,13 @@ class WorkdayPlanner implements \ArrayAccess, \Countable, \IteratorAggregate
     public function getIterator()
     {
         // Only iterate through the numeric indexes.
-        return new \ArrayIterator(
-            array_filter($this->workdays, function ($key) {
-                return is_int($key);
-            }, ARRAY_FILTER_USE_KEY)
-        );
+        return new \ArrayIterator($this->workdays);
     }
 
     public function getWorkdays(string $format = 'Y-m-d'): array
     {
         $workdays = [];
         foreach ($this->workdays as $index => $date) {
-            if (!is_int($index)) {
-                continue;
-            }
-
             $workdays[] = $date->format($format);
         }
 
