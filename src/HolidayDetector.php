@@ -43,12 +43,14 @@ class HolidayDetector
     {
         // Bug out if the year has already been initialized.
         if ($this->year === $year) {
-            return;
+            return $this;
         }
 
         $this->year = $year;
 
         $this->loadHolidays();
+
+        return $this;
     }
 
     protected function fetchHolidaySpecs(): array
