@@ -21,7 +21,7 @@ class WorkdayPlanner implements \ArrayAccess, \Countable, \IteratorAggregate
     /** @var int */
     private $numberOfWorkdays = 0;
 
-    public function __construct(\DateTime $startDate, \DateTime $endDate, int $year = null, string $country = 'us')
+    public function __construct(\DateTime $startDate, \DateTime $endDate, string $country = 'us')
     {
         if ($startDate >= $endDate) {
             throw new \LogicException('The start date needs to be before the end date.');
