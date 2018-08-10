@@ -135,8 +135,9 @@ class HolidayDetector
         }
     }
 
-    public function isHoliday(DateTime $date): bool
+    public function isHoliday(string $dateString): bool
     {
+        $date = new \DateTime($dateString);
         $this->changeYear((int) $date->format('Y'));
 
         $isoDate = $date->format('Y-m-d');

@@ -20,7 +20,7 @@ class WorkdayDetector
         $isoDay = $date->format('N');
 
         $isWeekend = ($isoDay >= 6);
-        $isHoliday = (new HolidayDetector($country))->isHoliday($date);
+        $isHoliday = (new HolidayDetector($country))->isHoliday($date->format('Y-m-d'));
 
         return !($isWeekend || $isHoliday);
     }

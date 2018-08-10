@@ -14,7 +14,6 @@
 namespace PHPExperts\WorkdayPlanner\Tests;
 
 use PHPExperts\WorkdayPlanner\HolidayDetector;
-use PHPExperts\WorkdayPlanner\WorkdayPlanner;
 use PHPUnit\Framework\TestCase;
 
 class HolidayDetectorTest extends TestCase
@@ -45,7 +44,7 @@ class HolidayDetectorTest extends TestCase
 
         $year = date('Y');
         $this->assertTrue(
-            $this->detector->isHoliday(new \DateTime($year.'-04-17')),
+            $this->detector->isHoliday($year.'-04-17'),
             'Did not successfully load the St. Patrick\'s Day data.'
         );
     }
@@ -74,7 +73,7 @@ class HolidayDetectorTest extends TestCase
             $detector->addHoliday($floatingHoliday);
 
             $this->assertTrue(
-                $detector->isHoliday(new \DateTime($expectedDate)),
+                $detector->isHoliday($expectedDate),
                 "Did not successfully load the flexible holiday data: ($expectedDate)."
             );
 
@@ -106,14 +105,14 @@ class HolidayDetectorTest extends TestCase
 
         foreach ($nonHolidays as $day) {
             $this->assertFalse(
-                $this->detector->isHoliday(new \DateTime($day)),
+                $this->detector->isHoliday($day),
                 "A non-holiday($day) was detected as a holiday."
             );
         }
 
         foreach ($holidays as $day) {
             $this->assertTrue(
-                $this->detector->isHoliday(new \DateTime($day)),
+                $this->detector->isHoliday($day),
                 "A holiday ($day) was detected as a non-holiday."
             );
         }
@@ -164,8 +163,8 @@ JSON;
     public function testWillReportFridayAsTheObservedDayForSaturdayHolidays()
     {
         // 2016-12-24 is on a Saturday.
-        $this->assertTrue($this->detector->isHoliday(new \DateTime('2016-12-24')));
-        $this->assertTrue($this->detector->isHoliday(new \DateTime('2016-12-23')));
+        $this->assertTrue($this->detector->isHoliday('2016-12-24'));
+        $this->assertTrue($this->detector->isHoliday('2016-12-23'));
         $this->assertEquals(new \DateTime('2016-12-24'), $this->detector->getHoliday('Christmas Eve'));
         $this->assertEquals(new \DateTime('2016-12-23'), $this->detector->getHoliday('Christmas Eve (Observed)'));
     }
@@ -173,8 +172,8 @@ JSON;
     public function testWillReportFridayAsTheObservedDayForSundayHolidays()
     {
         // 2021-07-04 is on a Sunday.
-        $this->assertTrue($this->detector->isHoliday(new \DateTime('2021-07-04')));
-        $this->assertTrue($this->detector->isHoliday(new \DateTime('2021-07-05')));
+        $this->assertTrue($this->detector->isHoliday('2021-07-04'));
+        $this->assertTrue($this->detector->isHoliday('2021-07-05'));
         $this->assertEquals(new \DateTime('2021-07-04'), $this->detector->getHoliday('Independence Day'));
         $this->assertEquals(new \DateTime('2021-07-05'), $this->detector->getHoliday('Independence Day (Observed)'));
     }
