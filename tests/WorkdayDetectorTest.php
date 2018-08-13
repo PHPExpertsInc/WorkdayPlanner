@@ -18,34 +18,33 @@ use PHPUnit\Framework\TestCase;
 
 class WorkdayDetectorTest extends TestCase
 {
+    public function canDetermineIfADateIsAWorkdayProvider()
+    {
+        return [
+            ['2018-08-06', '2018-07-28', '2018-01-01'],
+            ['2018-08-10', '2018-08-05', '2018-11-22'],
+        ];
+    }
+
     /**
      * @covers \PHPExperts\WorkdayPlanner\WorkdayDetector
+     * @dataProvider canDetermineIfADateIsAWorkdayProvider
      */
-    public function testCanDetermineIfADateIsAWorkday()
+    public function testCanDetermineIfADateIsAWorkday($workday, $weekday, $holiday)
     {
-        $workdays = ['2018-08-06', '2018-08-10'];
-        $weekdays = ['2018-07-28', '2018-08-05'];
-        $holidays = ['2018-01-01', '2018-11-22'];
+        $this->assertTrue(
+            WorkdayDetector::isWorkday(new \DateTime($workday)),
+            "A workday ($workday) was not detected as a workday."
+        );
 
-        foreach ($workdays as $day) {
-            $this->assertTrue(
-                WorkdayDetector::isWorkday(new \DateTime($day)),
-                "A workday ($day) was not detected as a workday."
-            );
-        }
+        $this->assertFalse(
+            WorkdayDetector::isWorkday(new \DateTime($weekday)),
+            "A weekday ($weekday) was detected as a workday."
+        );
 
-        foreach ($weekdays as $day) {
-            $this->assertFalse(
-                WorkdayDetector::isWorkday(new \DateTime($day)),
-                "A weekday ($day) was detected as a workday."
-            );
-        }
-
-        foreach ($holidays as $day) {
-            $this->assertFalse(
-                WorkdayDetector::isWorkday(new \DateTime($day)),
-                "A holiday ($day) was detected as a workday."
-            );
-        }
+        $this->assertFalse(
+             WorkdayDetector::isWorkday(new \DateTime($holiday)),
+             "A holiday ($holiday) was detected as a workday."
+        );
     }
 }

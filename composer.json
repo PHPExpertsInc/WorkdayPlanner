@@ -17,9 +17,6 @@
         "phpstan/phpstan": "^0.10.2"
     },
     "autoload": {
-        "classmap": [
-            "tests"
-        ],
         "psr-4": {
             "PHPExperts\\WorkdayPlanner\\": "src"
         }

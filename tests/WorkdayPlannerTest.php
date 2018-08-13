@@ -160,18 +160,19 @@ class WorkdayPlannerTest extends TestCase
         $planner = new WorkdayPlanner(new \DateTime($expectedDates[0]), new \DateTime(end($expectedDates)));
 
         // Ensure it exists before the unset.
-        $this->assertTrue(isset($planner[2]));
-        $this->assertTrue(isset($planner['2018-08-03']));
+        $this->assertNotEmpty($planner[2]);
+        $this->assertNotEmpty($planner['2018-08-03']);
 
         unset($planner['2018-08-03']);
 
         // Ensure neither key exists after.
-        $this->assertFalse(isset($planner['2018-08-03']));
-        $this->assertFalse(isset($planner[2]));
+        $this->assertArrayNotHasKey('2018-08-03', $planner);
+        $this->assertArrayNotHasKey(2, $planner);
 
         unset($planner[0]);
-        $this->assertFalse(isset($planner['2018-08-01']));
-        $this->assertFalse(isset($planner[0]));
+
+        $this->assertArrayNotHasKey('2018-08-01', $planner);
+        $this->assertArrayNotHasKey(0, $planner);
 
         unset($planner[99]);
     }
@@ -179,6 +180,7 @@ class WorkdayPlannerTest extends TestCase
     public function testProperlyHandlesAStartDateLaterThanTheEndDate()
     {
         $this->expectException(\LogicException::class);
+        $this->expectExceptionMessage("The start date needs to be before the end date.");
 
         $startDate = new \DateTime('2011-05-01');
         $endDate = new \DateTime('2011-04-01');
@@ -189,6 +191,7 @@ class WorkdayPlannerTest extends TestCase
     public function testProperlyHandlesAStartDateEqualToTheEndDate()
     {
         $this->expectException(\LogicException::class);
+        $this->expectExceptionMessage("The start date needs to be before the end date.");
 
         $startDate = new \DateTime('2011-05-01');
         $endDate = new \DateTime('2011-05-01');
