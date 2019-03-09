@@ -49,10 +49,20 @@ class HolidayDetectorTest extends TestCase
         );
     }
 
+    public function canParseFloatingHolidayDatesProvider(): array
+    {
+        return [
+            [2018, '2018-01-15'],
+            [2019, '2019-01-21'],
+            [2020, '2020-01-20'],
+        ];
+    }
+
     /**
      * @covers \PHPExperts\WorkdayPlanner\HolidayDetector
+     * @dataProvider canParseFloatingHolidayDatesProvider
      */
-    public function testCanParseFloatingHolidayDates()
+    public function testCanParseFloatingHolidayDates($year, $expectedDate)
     {
         $floatingHoliday = json_decode('
 {
@@ -61,66 +71,76 @@ class HolidayDetectorTest extends TestCase
     "when": "third Monday of January"
 }');
 
-        $years = [
-            '2018' => '2018-01-15',
-            '2019' => '2019-01-21',
-            '2020' => '2020-01-20',
+        $detector = new HolidayDetector('us');
+        $detector->changeYear($year);
+        $detector->addHoliday($floatingHoliday);
+
+        $this->assertTrue(
+            $detector->isHoliday($expectedDate),
+            "Did not successfully load the flexible holiday data: ($expectedDate)."
+        );
+
+        $this->assertEquals(
+            $expectedDate,
+            $detector->getHoliday('Martin Luther King Jr Day')->format('Y-m-d'),
+            'Retrieved the wrong date for Martin Luther King Jr Day.'
+        );
+    }
+
+    public function canDetermineIfADateIsNotAHolidayProvider()
+    {
+        return [
+            ['2018-08-06'],
+            ['2018-08-10'],
+            ['2018-11-21'],
+            ['2018-07-28'],
+            ['2018-08-05'],
+            ['2018-12-23'],
+            ['2032-07-03'],
         ];
-
-        foreach ($years as $year => $expectedDate) {
-            $detector = new HolidayDetector('us');
-            $detector->changeYear($year);
-            $detector->addHoliday($floatingHoliday);
-
-            $this->assertTrue(
-                $detector->isHoliday($expectedDate),
-                "Did not successfully load the flexible holiday data: ($expectedDate)."
-            );
-
-            $this->assertEquals(
-                $expectedDate,
-                $detector->getHoliday('Martin Luther King Jr Day')->format('Y-m-d'),
-                'Retrieved the wrong date for Martin Luther King Jr Day.'
-            );
-        }
     }
 
     /**
      * @covers \PHPExperts\WorkdayPlanner\HolidayDetector
+     * @dataProvider canDetermineIfADateIsNotAHolidayProvider
      */
-    public function testCanDetermineIfADateIsAHoliday()
+    public function testCanDetermineIfADateIsNotAHoliday($nonHoliday)
     {
-        $nonHolidays = [
-            '2018-08-06', '2018-08-10', '2018-11-21',
-            '2018-07-28', '2018-08-05', '2018-12-23',
-            '2032-07-03',
-        ];
-        $holidays = [
+        $this->assertFalse(
+            $this->detector->isHoliday($nonHoliday),
+            "A non-holiday($nonHoliday) was detected as a holiday."
+        );
+    }
+
+    public function canDetermineIfADateIsAHolidayProvider()
+    {
+        return [
             // Easy holidays:
-            '2018-01-01', '2018-11-22',
+            ['2018-01-01'],
+            ['2018-11-22'],
+
             // Hard holidays:
-            '2032-07-05', '2021-12-24',
-
+            ['2032-07-05'],
+            ['2021-12-24'],
         ];
+    }
 
-        foreach ($nonHolidays as $day) {
-            $this->assertFalse(
-                $this->detector->isHoliday($day),
-                "A non-holiday($day) was detected as a holiday."
-            );
-        }
-
-        foreach ($holidays as $day) {
-            $this->assertTrue(
-                $this->detector->isHoliday($day),
-                "A holiday ($day) was detected as a non-holiday."
-            );
-        }
+    /**
+     * @covers \PHPExperts\WorkdayPlanner\HolidayDetector
+     * @dataProvider canDetermineIfADateIsAHolidayProvider
+     */
+    public function testCanDetermineIfADateIsAHoliday($holiday)
+    {
+        $this->assertTrue(
+            $this->detector->isHoliday($holiday),
+            "A holiday ($holiday) was detected as a non-holiday."
+        );
     }
 
     public function testShowsErrorForUnimplementedCountry()
     {
         $this->expectException(\LogicException::class);
+        $this->expectExceptionMessage("No accessible holiday data for 'nonexistant");
 
         new HolidayDetector('nonexistant');
     }
@@ -130,13 +150,10 @@ class HolidayDetectorTest extends TestCase
         $invalidFile = realpath(__DIR__.'/../data/holidays') . '/invalid.json';
         file_put_contents($invalidFile, 'invalid JSON');
 
-        try {
-            new HolidayDetector('invalid');
-            $this->fail('Did not throw an error with invalid JSON.');
-        } catch (\RuntimeException $e) {
-            unlink($invalidFile);
-            $this->assertEquals("Invalid holiday data for 'invalid'.", $e->getMessage());
-        }
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage("Invalid holiday data for 'invalid'.");
+
+        new HolidayDetector('invalid');
     }
 
     public function testShowsErrorForInvalidHolidaySpec()
