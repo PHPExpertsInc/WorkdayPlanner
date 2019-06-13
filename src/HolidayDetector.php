@@ -3,10 +3,11 @@
 /**
  * This file is part of the Workday Planner, a PHP Experts, Inc., Project.
  *
- * Copyright © 2018 PHP Experts, Inc.
+ * Copyright © 2018, 2019 PHP Experts, Inc.
  * Author: Theodore R. Smith <theodore@phpexperts.pro>
- *  GPG Fingerprint: 4BF8 2613 1C34 87AC D28F  2AD8 EB24 A91D D612 5690
- *  https://www.phpexperts.pro/
+ *   GPG Fingerprint: 4BF8 2613 1C34 87AC D28F  2AD8 EB24 A91D D612 5690
+ *   https://www.phpexperts.pro/
+ *   https://github.com/PHPExpertsInc/Skeleton
  *
  * This file is licensed under the MIT License.
  */
@@ -71,20 +72,18 @@ class HolidayDetector
 
     public function addHoliday($spec)
     {
-        $parseDate = function(string $when): DateTime {
+        $parseDate = function (string $when): DateTime {
             return new DateTime("{$this->year}-{$when}");
         };
-        $parseDay = function(string $when): DateTime {
+        $parseDay = function (string $when): DateTime {
             return new DateTime("$when {$this->year}");
         };
 
         if ($spec->type === 'date') {
             $date = $parseDate($spec->when);
-        }
-        elseif ($spec->type === 'day') {
+        } elseif ($spec->type === 'day') {
             $date = $parseDay($spec->when);
-        }
-        else {
+        } else {
             throw new \LogicException("Type '{$spec->type}' is not implemented.");
         }
 
@@ -107,6 +106,7 @@ class HolidayDetector
      * This method determines the appropriate observation date, if different.
      *
      * @param DateTime $date
+     *
      * @return DateTime
      */
     protected function getWeekendHolidayObservationDate(DateTime $date): DateTime
@@ -153,4 +153,3 @@ class HolidayDetector
         return $this->holidaysByName[$holidayName];
     }
 }
-

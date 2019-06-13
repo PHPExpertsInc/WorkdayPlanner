@@ -3,16 +3,18 @@
 /**
  * This file is part of the Workday Planner, a PHP Experts, Inc., Project.
  *
- * Copyright © 2018 PHP Experts, Inc.
+ * Copyright © 2018, 2019 PHP Experts, Inc.
  * Author: Theodore R. Smith <theodore@phpexperts.pro>
- *  GPG Fingerprint: 4BF8 2613 1C34 87AC D28F  2AD8 EB24 A91D D612 5690
- *  https://www.phpexperts.pro/
+ *   GPG Fingerprint: 4BF8 2613 1C34 87AC D28F  2AD8 EB24 A91D D612 5690
+ *   https://www.phpexperts.pro/
+ *   https://github.com/PHPExpertsInc/Skeleton
  *
  * This file is licensed under the MIT License.
  */
 
 namespace PHPExperts\WorkdayPlanner\Tests;
 
+use DateTime;
 use PHPExperts\WorkdayPlanner\WorkdayPlanner;
 use PHPUnit\Framework\TestCase;
 
@@ -31,8 +33,8 @@ class WorkdayPlannerTest extends TestCase
             /* Week 5 */ '2018-07-30', '2018-07-31',
         ];
 
-        $startDate = new \DateTime('2018-07-01');
-        $endDate = new \DateTime('2018-07-31');
+        $startDate = new DateTime('2018-07-01');
+        $endDate = new DateTime('2018-07-31');
 
         $planner = new WorkdayPlanner($startDate, $endDate);
         $workdays = $planner->getWorkdays();
@@ -50,8 +52,8 @@ class WorkdayPlannerTest extends TestCase
             /* Week 5 */ '2021-12-27', '2021-12-28', '2021-12-29', '2021-12-30',
         ];
 
-        $startDate = new \DateTime('2021-12-01');
-        $endDate = new \DateTime('2021-12-31');
+        $startDate = new DateTime('2021-12-01');
+        $endDate = new DateTime('2021-12-31');
 
         $planner = new WorkdayPlanner($startDate, $endDate);
         $workdays = $planner->getWorkdays();
@@ -69,8 +71,8 @@ class WorkdayPlannerTest extends TestCase
             /* Week 5 */ '2032-07-26', '2032-07-27', '2032-07-28', '2032-07-29', '2032-07-30',
         ];
 
-        $startDate = new \DateTime('2032-07-01');
-        $endDate = new \DateTime('2032-07-31');
+        $startDate = new DateTime('2032-07-01');
+        $endDate = new DateTime('2032-07-31');
 
         $planner = new WorkdayPlanner($startDate, $endDate);
         $workdays = $planner->getWorkdays();
@@ -82,14 +84,14 @@ class WorkdayPlannerTest extends TestCase
     {
         $expectedDates = ['2018-08-01', '2018-08-02', '2018-08-03', '2018-08-06', '2018-08-07'];
 
-        $planner = new WorkdayPlanner(new \DateTime($expectedDates[0]), new \DateTime(end($expectedDates)));
+        $planner = new WorkdayPlanner(new DateTime($expectedDates[0]), new DateTime(end($expectedDates)));
 
         /**
-         * @var int $index
-         * @var \DateTime $workday
+         * @var int
+         * @var DateTime $workday
          */
         foreach ($planner as $index => $workday) {
-            $this->assertInstanceOf(\DateTime::class, $workday);
+            $this->assertInstanceOf(DateTime::class, $workday);
             $this->assertEquals($expectedDates[$index], $workday->format('Y-m-d'));
         }
     }
@@ -98,19 +100,18 @@ class WorkdayPlannerTest extends TestCase
     {
         $expectedDates = ['2018-08-01', '2018-08-02', '2018-08-03', '2018-08-06', '2018-08-07'];
 
-        $planner = new WorkdayPlanner(new \DateTime($expectedDates[0]), new \DateTime(end($expectedDates)));
+        $planner = new WorkdayPlanner(new DateTime($expectedDates[0]), new DateTime(end($expectedDates)));
         $this->assertEquals(count($expectedDates), count($planner));
     }
-
 
     public function testCanAccessDatesViaTheArrayOperatorWithANumericIndex()
     {
         $expectedDates = ['2018-08-01', '2018-08-02', '2018-08-03', '2018-08-06', '2018-08-07'];
 
-        $planner = new WorkdayPlanner(new \DateTime($expectedDates[0]), new \DateTime(end($expectedDates)));
+        $planner = new WorkdayPlanner(new DateTime($expectedDates[0]), new DateTime(end($expectedDates)));
 
         for ($a = 0; $a < count($expectedDates); ++$a) {
-            $this->assertInstanceOf(\DateTime::class, $planner[$a]);
+            $this->assertInstanceOf(DateTime::class, $planner[$a]);
             $this->assertEquals($expectedDates[$a], $planner[$a]->format('Y-m-d'));
         }
     }
@@ -119,10 +120,10 @@ class WorkdayPlannerTest extends TestCase
     {
         $expectedDates = ['2018-08-01', '2018-08-02', '2018-08-03', '2018-08-06', '2018-08-07'];
 
-        $planner = new WorkdayPlanner(new \DateTime($expectedDates[0]), new \DateTime(end($expectedDates)));
+        $planner = new WorkdayPlanner(new DateTime($expectedDates[0]), new DateTime(end($expectedDates)));
 
         for ($a = 0; $a < count($expectedDates); ++$a) {
-            $this->assertInstanceOf(\DateTime::class, $planner[$expectedDates[$a]]);
+            $this->assertInstanceOf(DateTime::class, $planner[$expectedDates[$a]]);
             $this->assertEquals($expectedDates[$a], $planner[$expectedDates[$a]]->format('Y-m-d'));
         }
     }
@@ -131,7 +132,7 @@ class WorkdayPlannerTest extends TestCase
     {
         $expectedDates = ['2018-08-01', '2018-08-02', '2018-08-03', '2018-08-06', '2018-08-07'];
 
-        $planner = new WorkdayPlanner(new \DateTime($expectedDates[0]), new \DateTime(end($expectedDates)));
+        $planner = new WorkdayPlanner(new DateTime($expectedDates[0]), new DateTime(end($expectedDates)));
 
         for ($a = 0; $a < count($expectedDates); ++$a) {
             $this->assertTrue(isset($planner[$a]));
@@ -144,7 +145,7 @@ class WorkdayPlannerTest extends TestCase
     {
         $expectedDates = ['2018-08-01', '2018-08-02', '2018-08-03', '2018-08-06', '2018-08-07'];
 
-        $planner = new WorkdayPlanner(new \DateTime($expectedDates[0]), new \DateTime(end($expectedDates)));
+        $planner = new WorkdayPlanner(new DateTime($expectedDates[0]), new DateTime(end($expectedDates)));
 
         for ($a = 0; $a < count($expectedDates); ++$a) {
             $this->assertTrue(isset($planner[$expectedDates[$a]]));
@@ -157,7 +158,7 @@ class WorkdayPlannerTest extends TestCase
     {
         $expectedDates = ['2018-08-01', '2018-08-02', '2018-08-06', '2018-08-07'];
 
-        $planner = new WorkdayPlanner(new \DateTime($expectedDates[0]), new \DateTime(end($expectedDates)));
+        $planner = new WorkdayPlanner(new DateTime($expectedDates[0]), new DateTime(end($expectedDates)));
 
         // Ensure it exists before the unset.
         $this->assertNotEmpty($planner[2]);
@@ -180,10 +181,10 @@ class WorkdayPlannerTest extends TestCase
     public function testProperlyHandlesAStartDateLaterThanTheEndDate()
     {
         $this->expectException(\LogicException::class);
-        $this->expectExceptionMessage("The start date needs to be before the end date.");
+        $this->expectExceptionMessage('The start date needs to be before the end date.');
 
-        $startDate = new \DateTime('2011-05-01');
-        $endDate = new \DateTime('2011-04-01');
+        $startDate = new DateTime('2011-05-01');
+        $endDate = new DateTime('2011-04-01');
 
         new WorkdayPlanner($startDate, $endDate);
     }
@@ -191,18 +192,18 @@ class WorkdayPlannerTest extends TestCase
     public function testProperlyHandlesAStartDateEqualToTheEndDate()
     {
         $this->expectException(\LogicException::class);
-        $this->expectExceptionMessage("The start date needs to be before the end date.");
+        $this->expectExceptionMessage('The start date needs to be before the end date.');
 
-        $startDate = new \DateTime('2011-05-01');
-        $endDate = new \DateTime('2011-05-01');
+        $startDate = new DateTime('2011-05-01');
+        $endDate = new DateTime('2011-05-01');
 
         new WorkdayPlanner($startDate, $endDate);
     }
 
     public function testProperlyHandlesInvalidDates()
     {
-        $startDate = new \DateTime('2018-03-01');
-        $endDate = new \DateTime('2018-04-31');
+        $startDate = new DateTime('2018-03-01');
+        $endDate = new DateTime('2018-04-31');
 
         $planner = new WorkdayPlanner($startDate, $endDate);
 
@@ -212,13 +213,13 @@ class WorkdayPlannerTest extends TestCase
 
     public function testWontAllowManuallyAddingWorkdays()
     {
-        $startDate = new \DateTime('2018-08-01');
-        $endDate = new \DateTime('2018-08-02');
+        $startDate = new DateTime('2018-08-01');
+        $endDate = new DateTime('2018-08-02');
 
         foreach (['2018-08-04', 2] as $index) {
             try {
                 $planner = new WorkdayPlanner($startDate, $endDate);
-                $planner[$index] = new \DateTime('2018-08-04');
+                $planner[$index] = new DateTime('2018-08-04');
                 $this->fail('Manually adding a workday did not fail.');
             } catch (\LogicException $e) {
                 $this->assertEquals('Manually adding workdays is not allowed.', $e->getMessage());

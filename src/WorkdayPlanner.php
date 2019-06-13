@@ -3,10 +3,11 @@
 /**
  * This file is part of the Workday Planner, a PHP Experts, Inc., Project.
  *
- * Copyright © 2018 PHP Experts, Inc.
+ * Copyright © 2018, 2019 PHP Experts, Inc.
  * Author: Theodore R. Smith <theodore@phpexperts.pro>
- *  GPG Fingerprint: 4BF8 2613 1C34 87AC D28F  2AD8 EB24 A91D D612 5690
- *  https://www.phpexperts.pro/
+ *   GPG Fingerprint: 4BF8 2613 1C34 87AC D28F  2AD8 EB24 A91D D612 5690
+ *   https://www.phpexperts.pro/
+ *   https://github.com/PHPExpertsInc/Skeleton
  *
  * This file is licensed under the MIT License.
  */
@@ -76,8 +77,7 @@ class WorkdayPlanner implements \ArrayAccess, \Countable, \IteratorAggregate
         // Let PHP deal with undefined indexes in its typical fashion.
         if (is_int($index)) {
             return $this->workdays[$index];
-        }
-        else {
+        } else {
             return $this->workdaysByDate[$index];
         }
     }
@@ -102,8 +102,7 @@ class WorkdayPlanner implements \ArrayAccess, \Countable, \IteratorAggregate
         if (is_int($index)) {
             $numericKey = $index;
             $dateString = $this->workdays[$index]->format('Y-m-d');
-        }
-        else {
+        } else {
             // Search the workdays for the numeric key.
             $dateString = $index;
             $numericKey = array_search($dateString, $this->getWorkdays());
