@@ -1,12 +1,25 @@
 language: php
 
 php:
-  - 7.1
-  - 7.2
+  - '7.1'
+  - '7.2'
+  - '7.3'
 
 before_script:
-  - composer self-update
-  - composer install --no-interaction
+  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+  - chmod +x ./cc-test-reporter
+  - ./cc-test-reporter before-build
+  - travis_retry composer self-update
+  - travis_retry composer install --no-interaction --prefer-source
 
 script:
-  - vendor/bin/phpunit --coverage-text
+  # Fail the Travis CI build on the first error.
+  - set -e
+  - mkdir -p build/logs
+  - php vendor/bin/phpcs --standard=PSR12 src
+  - php vendor/bin/phpcs --standard=PSR1 tests
+  - php vendor/bin/phpstan analyze --level max src
+  - vendor/bin/phpunit --coverage-text --coverage-clover build/logs/clover.xml
+
+after_script:
+  - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT

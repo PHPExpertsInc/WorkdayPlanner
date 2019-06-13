@@ -21,7 +21,7 @@ class HolidayDetectorTest extends TestCase
     /** @var HolidayDetector */
     protected $detector;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->detector = new HolidayDetector('us');
 

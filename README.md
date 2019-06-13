@@ -1,5 +1,9 @@
 # The PHP Workday Planner
 
+[![Travis CI](https://travis-ci.org/phpexpertsinc/WorkdayPlanner.svg?branch=master)](https://travis-ci.org/phpexpertsinc/WorkdayPlanner)
+[![Maintainability](https://api.codeclimate.com/v1/badges/79656a8be4cb767b51ce/maintainability)](https://codeclimate.com/github/phpexpertsinc/WorkdayPlanner/maintainability)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/79656a8be4cb767b51ce/test_coverage)](https://codeclimate.com/github/phpexpertsinc/WorkdayPlanner/test_coverage)
+
 ## Installation
 
 Run `composer require phpexperts/workday-planner`
