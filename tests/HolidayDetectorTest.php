@@ -50,7 +50,7 @@ class HolidayDetectorTest extends TestCase
         );
     }
 
-    public function canParseFloatingHolidayDatesProvider(): array
+    public static function canParseFloatingHolidayDatesProvider(): array
     {
         return [
             [2018, '2018-01-15'],
@@ -88,7 +88,7 @@ class HolidayDetectorTest extends TestCase
         );
     }
 
-    public function canDetermineIfADateIsNotAHolidayProvider()
+    public static function canDetermineIfADateIsNotAHolidayProvider()
     {
         return [
             ['2018-08-06'],
@@ -113,7 +113,7 @@ class HolidayDetectorTest extends TestCase
         );
     }
 
-    public function canDetermineIfADateIsAHolidayProvider()
+    public static function canDetermineIfADateIsAHolidayProvider()
     {
         return [
             // Easy holidays:

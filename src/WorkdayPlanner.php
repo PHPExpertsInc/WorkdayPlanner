@@ -14,6 +14,8 @@
 
 namespace PHPExperts\WorkdayPlanner;
 
+use Traversable;
+
 class WorkdayPlanner implements \ArrayAccess, \Countable, \IteratorAggregate
 {
     /** @var \DateTime[] */
@@ -60,7 +62,7 @@ class WorkdayPlanner implements \ArrayAccess, \Countable, \IteratorAggregate
     /**
      * {@inheritdoc}
      */
-    public function offsetExists($index)
+    public function offsetExists($index): bool
     {
         if (is_string($index)) {
             return isset($this->workdaysByDate[$index]);
@@ -72,7 +74,7 @@ class WorkdayPlanner implements \ArrayAccess, \Countable, \IteratorAggregate
     /**
      * {@inheritdoc}
      */
-    public function offsetGet($index)
+    public function offsetGet($index): \DateTime
     {
         // Let PHP deal with undefined indexes in its typical fashion.
         if (is_int($index)) {
@@ -85,7 +87,7 @@ class WorkdayPlanner implements \ArrayAccess, \Countable, \IteratorAggregate
     /**
      * {@inheritdoc}
      */
-    public function offsetSet($index, $value)
+    public function offsetSet($index, $value): void
     {
         throw new \LogicException('Manually adding workdays is not allowed.');
     }
@@ -93,7 +95,7 @@ class WorkdayPlanner implements \ArrayAccess, \Countable, \IteratorAggregate
     /**
      * {@inheritdoc}
      */
-    public function offsetUnset($index)
+    public function offsetUnset($index): void
     {
         if (!isset($this->workdays[$index]) && !isset($this->workdaysByDate[$index])) {
             return;
@@ -115,7 +117,7 @@ class WorkdayPlanner implements \ArrayAccess, \Countable, \IteratorAggregate
     /**
      * {@inheritdoc}
      */
-    public function getIterator()
+    public function getIterator(): Traversable
     {
         // Only iterate through the numeric indexes.
         return new \ArrayIterator($this->workdays);

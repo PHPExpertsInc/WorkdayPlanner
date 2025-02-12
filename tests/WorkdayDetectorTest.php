@@ -19,7 +19,7 @@ use PHPUnit\Framework\TestCase;
 
 class WorkdayDetectorTest extends TestCase
 {
-    public function canDetermineIfADateIsAWorkdayProvider()
+    public static function canDetermineIfADateIsAWorkdayProvider(): array
     {
         return [
             ['2018-08-06', '2018-07-28', '2018-01-01'],
