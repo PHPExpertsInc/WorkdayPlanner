@@ -140,10 +140,12 @@ class HolidayDetectorTest extends TestCase
 
     public function testShowsErrorForUnimplementedCountry()
     {
-        $this->expectException(\LogicException::class);
-        $this->expectExceptionMessage("No accessible holiday data for 'nonexistant");
-
-        new HolidayDetector('nonexistant');
+        try {
+            new HolidayDetector('nonexistant');
+            self::fail('Created object with an invalid holiday.');
+        } catch (\LogicException $e) {
+            self::assertEquals( "No accessible holiday data for 'nonexistant'.", $e->getMessage());
+        }
     }
 
     public function testShowsErrorForInvalidData()
@@ -151,10 +153,14 @@ class HolidayDetectorTest extends TestCase
         $invalidFile = realpath(__DIR__ . '/../data/holidays') . '/invalid.json';
         file_put_contents($invalidFile, 'invalid JSON');
 
-        $this->expectException(\RuntimeException::class);
-        $this->expectExceptionMessage("Invalid holiday data for 'invalid'.");
-
-        new HolidayDetector('invalid');
+        try {
+            new HolidayDetector('invalid');
+            self::fail('Created an object with invalid data.');
+        } catch (\RuntimeException $e) {
+            self::assertEquals("Invalid holiday data for 'invalid'.", $e->getMessage());
+        } finally {
+            unlink($invalidFile);
+        }
     }
 
     public function testShowsErrorForInvalidHolidaySpec()
