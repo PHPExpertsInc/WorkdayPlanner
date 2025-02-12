@@ -39,7 +39,7 @@ class WorkdayPlannerTest extends TestCase
         $planner = new WorkdayPlanner($startDate, $endDate);
         $workdays = $planner->getWorkdays();
 
-        $this->assertEquals($expectedWorkdays, $workdays);
+        self::assertEquals($expectedWorkdays, $workdays);
     }
 
     public function testWillProperlyOffsetSaturdayHolidays()
@@ -58,7 +58,7 @@ class WorkdayPlannerTest extends TestCase
         $planner = new WorkdayPlanner($startDate, $endDate);
         $workdays = $planner->getWorkdays();
 
-        $this->assertEquals($expectedWorkdays, $workdays);
+        self::assertEquals($expectedWorkdays, $workdays);
     }
 
     public function testWillProperlyOffsetSundayHolidays()
@@ -77,7 +77,7 @@ class WorkdayPlannerTest extends TestCase
         $planner = new WorkdayPlanner($startDate, $endDate);
         $workdays = $planner->getWorkdays();
 
-        $this->assertEquals($expectedWorkdays, $workdays);
+        self::assertEquals($expectedWorkdays, $workdays);
     }
 
     public function testCanIterateThroughEachDate()
@@ -91,8 +91,8 @@ class WorkdayPlannerTest extends TestCase
          * @var DateTime $workday
          */
         foreach ($planner as $index => $workday) {
-            $this->assertInstanceOf(DateTime::class, $workday);
-            $this->assertEquals($expectedDates[$index], $workday->format('Y-m-d'));
+            self::assertInstanceOf(DateTime::class, $workday);
+            self::assertEquals($expectedDates[$index], $workday->format('Y-m-d'));
         }
     }
 
@@ -101,7 +101,7 @@ class WorkdayPlannerTest extends TestCase
         $expectedDates = ['2018-08-01', '2018-08-02', '2018-08-03', '2018-08-06', '2018-08-07'];
 
         $planner = new WorkdayPlanner(new DateTime($expectedDates[0]), new DateTime(end($expectedDates)));
-        $this->assertEquals(count($expectedDates), count($planner));
+        self::assertEquals(count($expectedDates), count($planner));
     }
 
     public function testCanAccessDatesViaTheArrayOperatorWithANumericIndex()
@@ -111,8 +111,8 @@ class WorkdayPlannerTest extends TestCase
         $planner = new WorkdayPlanner(new DateTime($expectedDates[0]), new DateTime(end($expectedDates)));
 
         for ($a = 0; $a < count($expectedDates); ++$a) {
-            $this->assertInstanceOf(DateTime::class, $planner[$a]);
-            $this->assertEquals($expectedDates[$a], $planner[$a]->format('Y-m-d'));
+            self::assertInstanceOf(DateTime::class, $planner[$a]);
+            self::assertEquals($expectedDates[$a], $planner[$a]->format('Y-m-d'));
         }
     }
 
@@ -123,8 +123,8 @@ class WorkdayPlannerTest extends TestCase
         $planner = new WorkdayPlanner(new DateTime($expectedDates[0]), new DateTime(end($expectedDates)));
 
         for ($a = 0; $a < count($expectedDates); ++$a) {
-            $this->assertInstanceOf(DateTime::class, $planner[$expectedDates[$a]]);
-            $this->assertEquals($expectedDates[$a], $planner[$expectedDates[$a]]->format('Y-m-d'));
+            self::assertInstanceOf(DateTime::class, $planner[$expectedDates[$a]]);
+            self::assertEquals($expectedDates[$a], $planner[$expectedDates[$a]]->format('Y-m-d'));
         }
     }
 
@@ -135,10 +135,10 @@ class WorkdayPlannerTest extends TestCase
         $planner = new WorkdayPlanner(new DateTime($expectedDates[0]), new DateTime(end($expectedDates)));
 
         for ($a = 0; $a < count($expectedDates); ++$a) {
-            $this->assertTrue(isset($planner[$a]));
+            self::assertTrue(isset($planner[$a]));
         }
 
-        $this->assertFalse(isset($planner[999]));
+        self::assertFalse(isset($planner[999]));
     }
 
     public function testCanUseDateIssetOnAWorkday()
@@ -148,10 +148,10 @@ class WorkdayPlannerTest extends TestCase
         $planner = new WorkdayPlanner(new DateTime($expectedDates[0]), new DateTime(end($expectedDates)));
 
         for ($a = 0; $a < count($expectedDates); ++$a) {
-            $this->assertTrue(isset($planner[$expectedDates[$a]]));
+            self::assertTrue(isset($planner[$expectedDates[$a]]));
         }
 
-        $this->assertFalse(isset($planner['2032-01-01']));
+        self::assertFalse(isset($planner['2032-01-01']));
     }
 
     public function testCanRemoveAWorkDayViaUnset()
@@ -161,19 +161,19 @@ class WorkdayPlannerTest extends TestCase
         $planner = new WorkdayPlanner(new DateTime($expectedDates[0]), new DateTime(end($expectedDates)));
 
         // Ensure it exists before the unset.
-        $this->assertNotEmpty($planner[2]);
-        $this->assertNotEmpty($planner['2018-08-03']);
+        self::assertNotEmpty($planner[2]);
+        self::assertNotEmpty($planner['2018-08-03']);
 
         unset($planner['2018-08-03']);
 
         // Ensure neither key exists after.
-        $this->assertArrayNotHasKey('2018-08-03', $planner);
-        $this->assertArrayNotHasKey(2, $planner);
+        self::assertArrayNotHasKey('2018-08-03', $planner);
+        self::assertArrayNotHasKey(2, $planner);
 
         unset($planner[0]);
 
-        $this->assertArrayNotHasKey('2018-08-01', $planner);
-        $this->assertArrayNotHasKey(0, $planner);
+        self::assertArrayNotHasKey('2018-08-01', $planner);
+        self::assertArrayNotHasKey(0, $planner);
 
         unset($planner[99]);
     }
@@ -208,7 +208,7 @@ class WorkdayPlannerTest extends TestCase
         $planner = new WorkdayPlanner($startDate, $endDate);
 
         $workdays = $planner->getWorkdays();
-        $this->assertEquals('2018-05-01', end($workdays));
+        self::assertEquals('2018-05-01', end($workdays));
     }
 
     public function testWontAllowManuallyAddingWorkdays()
@@ -222,7 +222,7 @@ class WorkdayPlannerTest extends TestCase
                 $planner[$index] = new DateTime('2018-08-04');
                 $this->fail('Manually adding a workday did not fail.');
             } catch (\LogicException $e) {
-                $this->assertEquals('Manually adding workdays is not allowed.', $e->getMessage());
+                self::assertEquals('Manually adding workdays is not allowed.', $e->getMessage());
             }
         }
     }

@@ -33,17 +33,17 @@ class WorkdayDetectorTest extends TestCase
      */
     public function testCanDetermineIfADateIsAWorkday($workday, $weekday, $holiday)
     {
-        $this->assertTrue(
+        self::assertTrue(
             WorkdayDetector::isWorkday(new \DateTime($workday)),
             "A workday ($workday) was not detected as a workday."
         );
 
-        $this->assertFalse(
+        self::assertFalse(
             WorkdayDetector::isWorkday(new \DateTime($weekday)),
             "A weekday ($weekday) was detected as a workday."
         );
 
-        $this->assertFalse(
+        self::assertFalse(
              WorkdayDetector::isWorkday(new \DateTime($holiday)),
              "A holiday ($holiday) was detected as a workday."
         );

@@ -44,7 +44,7 @@ class HolidayDetectorTest extends TestCase
         $this->detector->addHoliday($fixedHoliday);
 
         $year = date('Y');
-        $this->assertTrue(
+        self::assertTrue(
             $this->detector->isHoliday($year . '-04-17'),
             'Did not successfully load the St. Patrick\'s Day data.'
         );
@@ -76,12 +76,12 @@ class HolidayDetectorTest extends TestCase
         $detector->changeYear($year);
         $detector->addHoliday($floatingHoliday);
 
-        $this->assertTrue(
+        self::assertTrue(
             $detector->isHoliday($expectedDate),
             "Did not successfully load the flexible holiday data: ($expectedDate)."
         );
 
-        $this->assertEquals(
+        self::assertEquals(
             $expectedDate,
             $detector->getHoliday('Martin Luther King Jr Day')->format('Y-m-d'),
             'Retrieved the wrong date for Martin Luther King Jr Day.'
@@ -107,7 +107,7 @@ class HolidayDetectorTest extends TestCase
      */
     public function testCanDetermineIfADateIsNotAHoliday($nonHoliday)
     {
-        $this->assertFalse(
+        self::assertFalse(
             $this->detector->isHoliday($nonHoliday),
             "A non-holiday($nonHoliday) was detected as a holiday."
         );
@@ -132,7 +132,7 @@ class HolidayDetectorTest extends TestCase
      */
     public function testCanDetermineIfADateIsAHoliday($holiday)
     {
-        $this->assertTrue(
+        self::assertTrue(
             $this->detector->isHoliday($holiday),
             "A holiday ($holiday) was detected as a non-holiday."
         );
@@ -181,24 +181,24 @@ JSON;
 
     public function testProperlyHandlesUnknownHolidays()
     {
-        $this->assertNull($this->detector->getHoliday('Unknown Holiday'));
+        self::assertNull($this->detector->getHoliday('Unknown Holiday'));
     }
 
     public function testWillReportFridayAsTheObservedDayForSaturdayHolidays()
     {
         // 2016-12-24 is on a Saturday.
-        $this->assertTrue($this->detector->isHoliday('2016-12-24'));
-        $this->assertTrue($this->detector->isHoliday('2016-12-23'));
-        $this->assertEquals(new \DateTime('2016-12-24'), $this->detector->getHoliday('Christmas Eve'));
-        $this->assertEquals(new \DateTime('2016-12-23'), $this->detector->getHoliday('Christmas Eve (Observed)'));
+        self::assertTrue($this->detector->isHoliday('2016-12-24'));
+        self::assertTrue($this->detector->isHoliday('2016-12-23'));
+        self::assertEquals(new \DateTime('2016-12-24'), $this->detector->getHoliday('Christmas Eve'));
+        self::assertEquals(new \DateTime('2016-12-23'), $this->detector->getHoliday('Christmas Eve (Observed)'));
     }
 
     public function testWillReportFridayAsTheObservedDayForSundayHolidays()
     {
         // 2021-07-04 is on a Sunday.
-        $this->assertTrue($this->detector->isHoliday('2021-07-04'));
-        $this->assertTrue($this->detector->isHoliday('2021-07-05'));
-        $this->assertEquals(new \DateTime('2021-07-04'), $this->detector->getHoliday('Independence Day'));
-        $this->assertEquals(new \DateTime('2021-07-05'), $this->detector->getHoliday('Independence Day (Observed)'));
+        self::assertTrue($this->detector->isHoliday('2021-07-04'));
+        self::assertTrue($this->detector->isHoliday('2021-07-05'));
+        self::assertEquals(new \DateTime('2021-07-04'), $this->detector->getHoliday('Independence Day'));
+        self::assertEquals(new \DateTime('2021-07-05'), $this->detector->getHoliday('Independence Day (Observed)'));
     }
 }
