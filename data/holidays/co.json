@@ -1,0 +1,19 @@
+[
+  { "name": "Año Nuevo", "type": "date", "when": "01-01" },
+  { "name": "Día de los Reyes Magos", "type": "day", "when": "Monday following January 6" },
+  { "name": "Día de San José", "type": "day", "when": "Monday following March 19" },
+  { "name": "Jueves Santo", "type": "day", "when": "Thursday before Easter" },
+  { "name": "Viernes Santo", "type": "day", "when": "Friday before Easter" },
+  { "name": "Día del Trabajo", "type": "date", "when": "05-01" },
+  { "name": "Ascensión", "type": "day", "when": "Monday following 40 days after Easter" },
+  { "name": "Corpus Christi", "type": "day", "when": "Monday following 60 days after Easter" },
+  { "name": "Sagrado Corazón", "type": "day", "when": "Monday following 68 days after Easter" },
+  { "name": "Día de la Independencia", "type": "date", "when": "07-20" },
+  { "name": "Batalla de Boyacá", "type": "date", "when": "08-07" },
+  { "name": "La Asunción", "type": "day", "when": "Monday following August 15" },
+  { "name": "Día de la Raza", "type": "day", "when": "Monday following October 12" },
+  { "name": "Día de Todos los Santos", "type": "day", "when": "Monday following November 1" },
+  { "name": "Independencia de Cartagena", "type": "day", "when": "Monday following November 11" },
+  { "name": "Inmaculada Concepción", "type": "date", "when": "12-08" },
+  { "name": "Navidad", "type": "date", "when": "12-25" }
+]
