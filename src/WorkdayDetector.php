@@ -19,7 +19,6 @@ class WorkdayDetector
     public static function isWorkday(\DateTime $date, string $country = 'us'): bool
     {
         $isoDay = $date->format('N');
-
         $isWeekend = ($isoDay >= 6);
         $isHoliday = (new HolidayDetector($country))->isHoliday($date->format('Y-m-d'));
 

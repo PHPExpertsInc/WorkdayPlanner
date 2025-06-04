@@ -14,17 +14,20 @@
 
 namespace PHPExperts\WorkdayPlanner;
 
-use DateTime;
+use DateTimeImmutable;
+
+require_once __DIR__ . '/easter_date.php';
+ini_set('display_errors', '1');
 
 class HolidayDetector
 {
     /** @var string */
     protected $country;
 
-    /** @var DateTime[] */
+    /** @var DateTimeImmutable[] */
     protected $holidays;
 
-    /** @var DateTime[] */
+    /** @var DateTimeImmutable[] */
     protected $holidaysByName;
 
     /** @var int */
@@ -72,11 +75,53 @@ class HolidayDetector
 
     public function addHoliday($spec)
     {
-        $parseDate = function (string $when): DateTime {
-            return new DateTime("{$this->year}-{$when}");
+        //dump($spec);
+        $parseDate = function (string $when): DateTimeImmutable {
+            return new DateTimeImmutable("{$this->year}-{$when}");
         };
-        $parseDay = function (string $when): DateTime {
-            return new DateTime("$when {$this->year}");
+        $parseDay = function (string $when): DateTimeImmutable {
+            // Check for {weekday} following [x] days after Easter
+            if (preg_match(
+                '/^(?P<weekday>Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday) following (?P<days>\d+) days after Easter$/i',
+                $when,
+                $matches
+            )) {
+                return DateTimeImmutable::createFromFormat(
+                    'Y-m-d',
+                    date('Y-m-d', easter_date($this->year)))
+                    ->modify("+{$matches['days']} days")
+                    ->modify("next {$matches['weekday']}");
+            }
+
+            if (preg_match('/^(Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday)\s+following\s+(.+)$/i', $when, $matches)) {
+                $weekday = $matches[1];
+                $baseDateString = $matches[2];
+
+                // Create the base date
+                $date = new DateTimeImmutable($baseDateString);
+
+                // Get the next occurrence of the desired weekday
+                return $date->modify("next $weekday");
+            }
+
+            // Check for Thursday before Easter or Friday before Easter
+            if (preg_match('/^(Thursday|Friday)\s+before\s+Easter$/i', $when, $matches)) {
+                $weekday = strtolower($matches[1]); // Normalize to lowercase for strict comparison
+                $easterDate = DateTimeImmutable::createFromFormat(
+                    'Y-m-d',
+                    date('Y-m-d', easter_date($this->year))
+                );
+
+                if ($easterDate === false) {
+                    throw new RuntimeException("Failed to calculate Easter date for year {$this->year}");
+                }
+
+                // Calculate days to subtract (Thursday: 3 days, Friday: 2 days)
+                $daysBeforeEaster = ($weekday === 'thursday') ? 3 : 2;
+                return $easterDate->modify("-$daysBeforeEaster days");
+            }
+
+            return new DateTimeImmutable("$when {$this->year}");
         };
 
         if ($spec->type === 'date') {
@@ -105,11 +150,11 @@ class HolidayDetector
      *
      * This method determines the appropriate observation date, if different.
      *
-     * @param DateTime $date
+     * @param DateTimeImmutable $date
      *
-     * @return DateTime
+     * @return DateTimeImmutable
      */
-    protected function getWeekendHolidayObservationDate(DateTime $date): DateTime
+    protected function getWeekendHolidayObservationDate(DateTimeImmutable $date): DateTimeImmutable
     {
         /** @var int $dayOfWeek The ISO-8601 numeric representation of the day of the week (1-7 = Monday-Sunday). */
         $dayOfWeek = (int) $date->format('N');
@@ -136,7 +181,7 @@ class HolidayDetector
 
     public function isHoliday(string $dateString): bool
     {
-        $date = new \DateTime($dateString);
+        $date = new \DateTimeImmutable($dateString);
         $this->changeYear((int) $date->format('Y'));
 
         $isoDate = $date->format('Y-m-d');
@@ -144,7 +189,7 @@ class HolidayDetector
         return !empty($this->holidays[$isoDate]);
     }
 
-    public function getHoliday(string $holidayName): ?DateTime
+    public function getHoliday(string $holidayName): ?DateTimeImmutable
     {
         if (empty($this->holidaysByName[$holidayName])) {
             return null;

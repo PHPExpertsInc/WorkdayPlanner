@@ -23,6 +23,9 @@
         "symfony/var-dumper": "*",
         "squizlabs/php_codesniffer": "*"
     },
+    "suggest": {
+        "ext-calendar": "*"
+    },
     "autoload": {
         "psr-4": {
             "PHPExperts\\WorkdayPlanner\\": "src"
